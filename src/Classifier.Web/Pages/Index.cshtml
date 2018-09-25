@@ -28,6 +28,11 @@
         <div class="container">
           <span class="navbar-brand" href="#">TensorFlow Fruit Classifier</span>
           <span class="navbar-brand" href="#">{{ processingRate }} images/sec ({{ numberOfWorkers }} workers)</span>
+          <ul class="nav navbar-nav">
+            <li class="nav-item active"><a class="nav-link" href="#" v-on:click="fastGeneration()">Fast</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" v-on:click="slowGeneration()">Slow</a></li>
+          </ul>
+          <span href="#" class="navbar-text">(Queue: {{ queueLength }} images)</span>
         </div>
       </nav>
 
@@ -55,7 +60,8 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@@2.5.16/dist/vue.js"></script>
@@ -66,11 +72,20 @@
     const data = {
       results,
       processingRate: '-',
-      numberOfWorkers: '-'
+      numberOfWorkers: '-',
+      queueLength: '-'
     }
     const app = new Vue({
       el: '#app',
-      data
+      data,
+        methods: {
+          slowGeneration: function () {
+              $.post("/api/GenerateSlow")
+          },
+          fastGeneration: function () {
+              $.post("/api/GenerateFast")
+          }
+      }
     })
 
     const imagesSubject = new Rx.Subject()
@@ -85,6 +100,7 @@
 
     const connection = new signalR.HubConnection('/imageshub')
     connection.on('imageProcessed', imageProcessed)
+    connection.on('queueChanged', queueChanged)
     connection.onclose(() => {
       setTimeout(() => startConnection(connection), 2000)
     })
@@ -108,6 +124,10 @@
       }
 
       imagesSubject.next(result);
+    }
+
+    function queueChanged(result) {
+      data.queueLength = result;
     }
     </script>
   </body>
