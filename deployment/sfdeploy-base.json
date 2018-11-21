@@ -4,7 +4,7 @@
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "westus",
+      "defaultValue": "eastasia",
       "metadata": {
         "description": "Location of the resources."
       }
@@ -14,17 +14,19 @@
       "defaultValue": "fruit"
     },
     "accountName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "sbzfileshare"
     },
     "accountKey": {
-      "type": "securestring"
+      "type": "securestring",
+      "defaultValue": "OmTO0iwiaVeP/My0I1z+czEbpxQ5GUi/FOuA0voH4sxxWIwP9QT7kTPY28DniZ4VJfCU1Kpyn8qbcWXqRYtXnA=="
     }
   },
   "resources": [
     {
-      "apiVersion": "2018-03-01-privatepreview",
+      "apiVersion": "2018-07-01-preview",
       "name": "fruitshare",
-      "type": "Microsoft.ServiceFabric/volumes",
+      "type": "Microsoft.ServiceFabricMesh/volumes",
       "location": "[parameters('location')]",
       "properties": {
         "description": "File share backed by Azure Files storage.",
@@ -37,9 +39,9 @@
       }
     },
     {
-      "apiVersion": "2018-03-01-privatepreview",
+      "apiVersion": "2018-07-01-preview",
       "name": "ImageClassifierNetwork",
-      "type": "Microsoft.ServiceFabric/networks",
+      "type": "Microsoft.ServiceFabricMesh/networks",
       "location": "[parameters('location')]",
       "dependsOn": [],
       "properties": {

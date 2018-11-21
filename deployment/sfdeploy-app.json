@@ -4,7 +4,7 @@
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "westus",
+      "defaultValue": "eastasia",
       "metadata": {
         "description": "Location of the resources."
       }
@@ -24,9 +24,9 @@
   },
   "resources": [
     {
-      "apiVersion": "2018-03-01-privatepreview",
+      "apiVersion": "2018-07-01-preview",
       "name": "ImageClassifier",
-      "type": "Microsoft.ServiceFabric/applications",
+      "type": "Microsoft.ServiceFabricMesh/applications",
       "location": "[parameters('location')]",
       "dependsOn": [
       ],
@@ -59,7 +59,7 @@
               "replicaCount": 1,
               "networkRefs": [
                 {
-                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'ImageClassifierNetwork')]"
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'ImageClassifierNetwork')]"
                 }
               ]
             }
@@ -75,7 +75,7 @@
                   "image": "[parameters('workerImage')]",
                   "volumeRefs": [
                     {
-                      "name": "[resourceId('Microsoft.ServiceFabric/volumes', 'fruitshare')]",
+                      "name": "[resourceId('Microsoft.ServiceFabricMesh/volumes', 'fruitshare')]",
                       "destinationPath": "/app/assets/images"
                     }
                   ],
@@ -96,7 +96,7 @@
               "replicaCount": "[parameters('workerReplicas')]",
               "networkRefs": [
                 {
-                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'ImageClassifierNetwork')]"
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'ImageClassifierNetwork')]"
                 }
               ]
             }
